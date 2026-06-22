@@ -141,6 +141,8 @@ def load_config(config_path: Optional[str] = None) -> dict:
     _apply_env_override(config, "OMBRE_COMPRESS_API_KEY", "dehydration", "api_key")
     _apply_env_override(config, "OMBRE_COMPRESS_BASE_URL", "dehydration", "base_url")
     _apply_env_override(config, "OMBRE_COMPRESS_MODEL", "dehydration", "model")
+    # Accept both names: OMBRE_COMPRESS_FORMAT (dashboard) and OMBRE_COMPRESS_API_FORMAT (legacy)
+    _apply_env_override(config, "OMBRE_COMPRESS_FORMAT", "dehydration", "api_format")
     _apply_env_override(config, "OMBRE_COMPRESS_API_FORMAT", "dehydration", "api_format")
 
     # 向量化组（embedding）—— 写到 config["embedding"][*]

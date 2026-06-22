@@ -221,6 +221,16 @@ class Dehydrator:
         self.temperature = dehy_cfg.get("temperature", _DEFAULT_TEMPERATURE)
         # api_format: "openai_compat" (default) | "gemini" | "anthropic"
         self.api_format = dehy_cfg.get("api_format", "openai_compat")
+        # Auto-detect new Google AI Studio key format (AQ.*): these keys are not accepted
+        # by the OpenAI-compat endpoint (/v1beta/openai/) and must use the native
+        # generateContent API. Switch automatically so users don't need to set api_format manually.
+        if (
+            self.api_format == "openai_compat"
+            and self.api_key.startswith("AQ.")
+            and "generativelanguage.googleapis.com" in (self.base_url or "")
+        ):
+            self.api_format = "gemini"
+            logger.info("AQ.* key + generativelanguage.googleapis.com detected — auto-switching to native Gemini API")
         # thinking_budget: 仅 Gemini 2.5+/3.x「思考型」模型生效。默认 0 = 关闭思考。
         # 关键：gemini-3.5-flash 等模型默认会先消耗 output token 做「思考」，当
         # max_tokens 较小时思考会吃光预算 → 返回空文本（这正是脱水/抽取偶发返回
