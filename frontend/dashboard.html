@@ -78,6 +78,18 @@
     font-weight: 300;
     letter-spacing: 0.3px;
   }
+  .header-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 11px;
+  }
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: 6px;
+  }
   .search-bar {
     margin-left: auto;
     display: flex;
@@ -643,22 +655,75 @@
   .flow-arrow { color: var(--text-light); font-size: 16px; }
 
   @media (max-width: 768px) {
-    .header { padding: 20px; flex-wrap: wrap; }
-    .header h1 { font-size: 22px; }
-    .search-bar { margin-left: 0; width: 100%; }
-    .search-bar input { width: 100%; }
-    .tabs { padding: 0 16px; overflow-x: auto; }
-    .content { padding: 20px 16px; }
+    /* ── Header: title row + meta row + search row ── */
+    .header {
+      padding: 12px 16px;
+      flex-wrap: wrap;
+      gap: 0;
+      row-gap: 8px;
+      align-items: center;
+    }
+    .header h1 {
+      font-size: 20px;
+      order: 1;
+      flex: 1;
+      min-width: 0;
+    }
+    .header-actions {
+      order: 2;
+      margin-left: 0;
+      gap: 6px;
+    }
+    .header-actions button {
+      padding: 5px 11px;
+      font-size: 11px;
+    }
+    .header-meta {
+      order: 3;
+      width: 100%;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .search-bar {
+      order: 4;
+      margin-left: 0;
+      width: 100%;
+    }
+    .search-bar input { width: 100%; flex: 1; }
+
+    /* ── Tabs: compact key-grid ── */
+    .tabs {
+      margin: 8px 12px;
+      padding: 6px 8px;
+      gap: 5px;
+    }
+    .tab {
+      padding: 7px 10px 5px;
+      font-size: 12px;
+      flex: 1 0 calc(33% - 10px);
+      max-width: calc(50% - 6px);
+      text-align: center;
+    }
+    .tab .tab-en { font-size: 9px; }
+
+    /* ── Filter chips: two rows, tighter ── */
+    .filters { gap: 7px; margin-bottom: 16px; }
+    .filter-btn { padding: 6px 13px; font-size: 11px; }
+
+    /* ── Content & bucket rows ── */
+    .content { padding: 16px 12px; }
     .bucket-row {
       grid-template-columns: 28px 1fr 60px;
       gap: 8px;
-      padding: 12px 16px;
+      padding: 12px 14px;
     }
     .bucket-row .domain,
     .bucket-row .emotion,
     .bucket-row .time,
     .bucket-row .preview { display: none; }
     .detail-panel { width: 100%; }
+
+    /* ── Settings forms ── */
     .config-row, .form-row { flex-wrap: wrap; }
     .config-row label, .form-row label { width: 100%; }
     .breath-flow { display: none; }
@@ -780,6 +845,40 @@
     outline: none;
     box-shadow: inset 3px 3px 7px var(--shadow-dark-subtle), inset -3px -3px 6px var(--shadow-light), 0 0 0 2px var(--accent-glow) !important;
   }
+
+  /* ============ 滑块：暖金拟物旋钮 ============ */
+  input[type=range] {
+    -webkit-appearance: none; appearance: none;
+    background: transparent !important;
+    border: none !important; box-shadow: none !important;
+    height: 20px; padding: 0; cursor: pointer;
+  }
+  input[type=range]::-webkit-slider-runnable-track {
+    height: 6px;
+    background: var(--surface-solid);
+    border-radius: 20px;
+    box-shadow: inset 1px 1px 4px var(--shadow-dark-subtle), inset -1px -1px 3px var(--shadow-light);
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-light), var(--accent));
+    margin-top: -6px;
+    box-shadow: 2px 2px 5px var(--shadow-dark), -1px -1px 3px rgba(255,253,247,0.7);
+    transition: transform .12s ease;
+  }
+  input[type=range]::-webkit-slider-thumb:active { transform: scale(0.88); }
+  input[type=range]::-moz-range-track {
+    height: 6px; background: var(--surface-solid); border-radius: 20px; border: none;
+    box-shadow: inset 1px 1px 4px var(--shadow-dark-subtle), inset -1px -1px 3px var(--shadow-light);
+  }
+  input[type=range]::-moz-range-thumb {
+    width: 18px; height: 18px; border-radius: 50%; border: none;
+    background: linear-gradient(135deg, var(--accent-light), var(--accent));
+    box-shadow: 2px 2px 5px var(--shadow-dark), -1px -1px 3px rgba(255,253,247,0.7);
+  }
+  /* checkbox / radio：accent 统一暖金 */
+  input[type=checkbox], input[type=radio] { accent-color: var(--accent); }
 
   /* ============ 按钮：暖金主功能键 + 中性实体键，均带机械按压 ============ */
   .btn-primary, .breath-controls button {
@@ -1127,21 +1226,25 @@
     <img class="ob-logo" src="/static/icon.svg" alt="OB" />
     Ombre Brain<span class="version-badge" id="version-badge"></span>
   </h1>
-  <span class="stats" id="stats">loading...</span>
-  <span id="heartbeat-indicator" title="MCP 心跳" style="margin-left:10px;font-size:11px;color:var(--text-dim);display:inline-flex;align-items:center;gap:4px;">
-    <span id="heartbeat-dot" style="width:8px;height:8px;border-radius:50%;background:#bbb;display:inline-block;"></span>
-    <span id="heartbeat-text">…</span>
-  </span>
-  <span id="anchor-counter" title="anchor = 坐标系桶，硬上限 24" style="margin-left:10px;font-size:11px;color:var(--text-dim);cursor:pointer;display:inline-flex;align-items:center;gap:4px;" onclick="document.querySelector('[data-tab=anchors]')?.click()">
-    <i data-lucide="anchor" style="width:12px;height:12px;"></i>
-    <span id="anchor-counter-text">0/24</span>
-  </span>
+  <div class="header-meta">
+    <span class="stats" id="stats">loading...</span>
+    <span id="heartbeat-indicator" title="MCP 心跳" style="font-size:11px;color:var(--text-dim);display:inline-flex;align-items:center;gap:4px;">
+      <span id="heartbeat-dot" style="width:8px;height:8px;border-radius:50%;background:#bbb;display:inline-block;"></span>
+      <span id="heartbeat-text">…</span>
+    </span>
+    <span id="anchor-counter" title="anchor = 坐标系桶，硬上限 24" style="font-size:11px;color:var(--text-dim);cursor:pointer;display:inline-flex;align-items:center;gap:4px;" onclick="document.querySelector('[data-tab=anchors]')?.click()">
+      <i data-lucide="anchor" style="width:12px;height:12px;"></i>
+      <span id="anchor-counter-text">0/24</span>
+    </span>
+  </div>
   <div class="search-bar">
     <input type="text" id="search-input" placeholder="搜索记忆…" onkeydown="if(event.key==='Enter')doSearch()" />
-    <button onclick="doSearch()" title="搜索" style="background:var(--surface);border:1px solid var(--border);color:var(--text-dim);border-radius:2px;padding:0 14px;font-size:12px;cursor:pointer;white-space:nowrap;transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">搜索</button>
+    <button onclick="doSearch()" title="搜索">搜索</button>
   </div>
-  <button onclick="openFeedback()" title="给作者反馈" style="margin-left:8px;background:none;border:1px solid var(--border);color:var(--text-dim);border-radius:2px;padding:6px 14px;font-size:12px;cursor:pointer;">反馈</button>
-  <button onclick="doLogout()" title="退出登录" style="margin-left:8px;background:none;border:1px solid var(--border);color:var(--text-dim);border-radius:2px;padding:6px 14px;font-size:12px;cursor:pointer;">退出</button>
+  <div class="header-actions">
+    <button onclick="openFeedback()" title="给作者反馈">反馈</button>
+    <button onclick="doLogout()" title="退出登录">退出</button>
+  </div>
 </div>
 
 <div class="tabs">
